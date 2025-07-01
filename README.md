@@ -26,15 +26,16 @@ The **LMS Lakehouse Project** is built using **Microsoft Fabric** to ingest, pro
 ### ⚡ Data Processing & Ingestion:
 
 - **Daily Incremental Ingestion:**
-  - LMS system sends **one file per day**
+  - LMS system sends **one delta file per day**
   - Files first land in **Raw folder**, then **appended** to the **Landing folder** in ADLS Gen-2
-  - **Append-only logic** used in Landing Zone (no deduplication or merge logic)
+  - **Append-only logic** used in Landing Zone
+  - **UPSERT logic** used in the Medallion architecture layers to create **managed delta tables** in the lakehouses
   - Data loading based on **partition-based (date) + batch window (pipelines)** incremental strategy
 
 - **Lakehouse Transformation Layers:**
-  1. **Raw → Landing:** Appends new daily files without deduplication
+  1. **Raw → Landing:** Appends new daily files without deduplication or MERGE logic
   2. **Landing → Bronze:** UPSERT logic to insert new and update existing records
-  3. **Bronze → Silver:** Refined transformations with UPSERT handling
+  3. **Bronze → Silver:** Refined transformations like handling duplicates, null values, imputation, standardization & checking logical inconsistencies with UPSERT handling
   4. **Silver → Gold:** 
      - Performed **data modeling** by breaking a unified dataset into:
        - `dim_course`
@@ -58,30 +59,27 @@ The **LMS Lakehouse Project** is built using **Microsoft Fabric** to ingest, pro
 
 ---
 
-## 📌 How to Run the Project
+## 📌 How to Run the Project (without using Fabric Pipelines)
 
 1. **Set up Azure Environment:**
    - Create **ADLS Gen2** container named `fabricproject`
    - Configure your **Microsoft Fabric workspace**
 
-2. **Prepare Folder Structure in ADLS:**
-   - `raw/` — for incoming LMS files
+2. **Prepare Folder Structure in ADLS and create a workspace in Fabric:**
+   - `raw/` — for incoming LMS files (upload one file each day)
    - `landing/` — append-only zone for partitioned daily data
+   - `fabric_DEV` - for creating all the notebooks, pipelines and lakehouses
 
 3. **Import and Configure Notebooks in Fabric:**
-   - Notebook 1: Raw → Landing  
-   - Notebook 2: Landing → Bronze  
-   - Notebook 3: Bronze → Silver  
-   - Notebook 4: Silver → Gold  
+   - 01. Raw To Landing: Raw → Landing  
+   - 02. Landing To Bronze: Landing → Bronze (Default Lakehouse: LH_Bronze)
+   - 03. Silver Transformation: Bronze → Silver  (Default Lakehouse: LH_Silver)
+   - 04. Gold Layer: Silver → Gold  (Default Lakehouse: LH_Gold)
 
-4. **Set Up Pipelines:**
-   - Create Fabric Pipelines with parameters:
-     - `processed_date`: today's file date
-     - `workspace_name`: Fabric workspace name
-
-5. **Configure CI/CD:**
-   - Use **Azure DevOps** for source control and versioning
-   - Deploy using **Fabric Deployment Pipelines**
+4. **Run the notebooks in sequence while hardcoding the following parameters in each file:**
+   - `today_file`: file name
+   - `processed_date`: today's date
+   - `workspace_name`: Fabric workspace name
 
 ---
 
