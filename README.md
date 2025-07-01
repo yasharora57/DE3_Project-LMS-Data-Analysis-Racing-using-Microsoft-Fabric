@@ -52,6 +52,8 @@ The **LMS Lakehouse Project** is built using **Microsoft Fabric** to ingest, pro
   1. **Raw to Landing Pipeline:** Automates daily ingestion with `Get Metadata` and `ForEach` with parameters: `file_name` and `processed_date`
   2. **Layered Notebooks:** Separate notebooks for each transformation step across Bronze, Silver, and Gold with parameters: `processed_date` and `workspace_name`
   3. **Master Orchestration Pipeline:** Controls full medallion flow with parameterization
+ 
+![Master Pipeline](https://github.com/yasharora57/DE3_Project-LMS-Data-Engineering-using-Microsoft-Fabric/blob/e53d33011bba563a9b09988675a34134feaaf5e4/fb_pipeline.png)
 
 - **CI/CD Workflow:**
   - **Continuous Integration:** Configured using **Azure DevOps Repos**
