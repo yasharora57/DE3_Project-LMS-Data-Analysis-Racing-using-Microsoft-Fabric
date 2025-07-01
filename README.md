@@ -7,7 +7,7 @@
 - **Project Resources:** Data files
 - **Project Architecture**
 
-The **LMS Lakehouse Project** is built using **Microsoft Fabric** to ingest, process, and layer incremental LMS data using **Medallion Architecture** and **Azure Data Lake Gen-2 (ADLS)**. The solution handles **daily ingestion** of LMS records with automated pipelines, modular notebooks, UPSERT-enabled transformations, and CI/CD integration for scalable operations.
+The **LMS Lakehouse Project** is built using **Microsoft Fabric** to ingest, process, and layer incremental LMS data using **Medallion Architecture** and **Azure Data Lake Gen-2 (ADLS)**. The solution handles **daily incremental ingestion** of LMS records with automated pipelines, modular notebooks, data modelling, and CI/CD integration for scalable operations.
 
 ---
 
